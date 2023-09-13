@@ -22,8 +22,3 @@ Experimenting the refine tool
 ## Authors
 
 Caio Barbosa
-
-
-
-
-
