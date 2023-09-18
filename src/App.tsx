@@ -14,7 +14,6 @@ import routerProvider, {
     DocumentTitleHandler,
 } from "@refinedev/react-router-v6";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { MuiInferencer } from "@refinedev/inferencer/mui";
 import { UserList } from "./pages/user/list";
 import { UserCreate } from "./pages/user/create";
 import { UserEdit } from "./pages/user/edit";

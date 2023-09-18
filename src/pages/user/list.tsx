@@ -6,13 +6,15 @@ import {
     
 } from "@refinedev/mui";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
-import { IResourceComponentsProps, useMany } from "@refinedev/core";
+import { IResourceComponentsProps, useMany, useNavigation } from "@refinedev/core";
 import TextField from "@mui/material/TextField/TextField";
 import { useGo } from '@refinedev/core';
 import Button from "@mui/material/Button";
 
 export const UserList: React.FC<IResourceComponentsProps> = () => {
     const { dataGridProps } = useDataGrid();
+    const { edit, show } = useNavigation();
+
 
     const { data: userData } = useMany({
         resource: "users",
@@ -65,8 +67,8 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
                     // Aqui você pode adicionar botões de "Edit" e "Show" para cada linha
                     return (
                         <div>
-                            <Button onClick={() => useGo('users/edit/:id')} >Edit</Button>
-                            <Button onClick={() => handleShow(row.id)}>Show</Button>
+                            <Button onClick={() => edit("users", row.id)} >Edit</Button>
+                            <Button onClick={() => show("users", row.id)}>Show</Button>
                         </div>
                     );
                 },
