@@ -1,22 +1,23 @@
-import { useShow, useOne } from "@refinedev/core";
+import {
+    useShow,
+    IResourceComponentsProps,
+    useOne,
+} from "@refinedev/core";
 import {
     Show,
-    NumberField,
     TextFieldComponent as TextField,
-    MarkdownField,
     DateField,
 } from "@refinedev/mui";
-import Typography from "@mui/material/Typography";
-import Stack from "@mui/material/Stack";
+import { Typography, Stack } from "@mui/material";
 
-export const UserShow = () => {
+export const UserShow: React.FC<IResourceComponentsProps> = () => {
     const { queryResult } = useShow();
     const { data, isLoading } = queryResult;
 
     const record = data?.data;
 
-    const { data: categoryData, isLoading: categoryIsLoading } = useOne({
-        resource: "categories",
+    const { data: userData } = useOne({
+        resource: "users",
         id: record?.category?.id || "",
         queryOptions: {
             enabled: !!record,
@@ -29,28 +30,15 @@ export const UserShow = () => {
                 <Typography variant="body1" fontWeight="bold">
                     Id
                 </Typography>
-                <NumberField value={record?.id ?? ""} />
+                <TextField value={record?.id ?? ""} />
                 <Typography variant="body1" fontWeight="bold">
-                    Title
+                    Name
                 </Typography>
-                <TextField value={record?.title} />
+                <TextField value={record?.name} />
                 <Typography variant="body1" fontWeight="bold">
-                    Content
+                    Birthday
                 </Typography>
-                <MarkdownField value={record?.content} />
-                <Typography variant="body1" fontWeight="bold">
-                    Category
-                </Typography>
-
-                {categoryIsLoading ? (
-                    <>Loading...</>
-                ) : (
-                    <>{categoryData?.data?.title}</>
-                )}
-                <Typography variant="body1" fontWeight="bold">
-                    Status
-                </Typography>
-                <TextField value={record?.status} />
+                <TextField value={record?.birthday} />
                 <Typography variant="body1" fontWeight="bold">
                     Created At
                 </Typography>

@@ -1,37 +1,83 @@
-import { useList, HttpError } from "@refinedev/core";
+import React from "react";
+import {
+    useDataGrid,
+    List,
+    DateField,
+    
+} from "@refinedev/mui";
+import { DataGrid, GridColDef } from "@mui/x-data-grid";
+import { IResourceComponentsProps, useMany } from "@refinedev/core";
+import TextField from "@mui/material/TextField/TextField";
+import { useGo } from '@refinedev/core';
+import Button from "@mui/material/Button";
 
-interface IProduct {
-    id: number;
-    name: string;
-    material: string;
-}
+export const UserList: React.FC<IResourceComponentsProps> = () => {
+    const { dataGridProps } = useDataGrid();
 
-function UserList() {
-    const { data, isLoading, isError } = useList<IProduct, HttpError>({
-        resource: "products",
+    const { data: userData } = useMany({
+        resource: "users",
+        ids: dataGridProps?.rows?.map((item: any) => item?.category?.id) ?? [],
+        queryOptions: {
+            enabled: !!dataGridProps?.rows,
+        },
     });
 
-    const products = data?.data ?? [];
-
-    if (isLoading) {
-        return <div>Loading...</div>;
-    }
-
-    if (isError) {
-        return <div>Something went wrong!</div>;
-    }
+    const columns = React.useMemo<GridColDef[]>(
+        () => [
+            {
+                field: "id",
+                headerName: "Id",
+                type: "number",
+                minWidth: 50,
+            },
+            {
+                field: "name",
+                flex: 1,
+                headerName: "name",
+                minWidth: 250,
+                renderCell: function render({ value }) {
+                    return <TextField value={value} />;
+                },
+            },
+            {
+                field: "birthday",
+                flex: 1,
+                headerName: "Birthday",
+                minWidth: 250,
+                renderCell: function render({ value }) {
+                    return <DateField value={value} />;
+                },
+            },
+            {
+                field: "createdAt",
+                flex: 1,
+                headerName: "Created At",
+                minWidth: 250,
+                renderCell: function render({ value }) {
+                    return <DateField value={value} />;
+                },
+            },
+            {
+                field: "actions", // Nome da coluna de ações
+                headerName: "Actions",
+                minWidth: 150,
+                renderCell: function render({ row }) {
+                    // Aqui você pode adicionar botões de "Edit" e "Show" para cada linha
+                    return (
+                        <div>
+                            <Button onClick={() => useGo('users/edit/:id')} >Edit</Button>
+                            <Button onClick={() => handleShow(row.id)}>Show</Button>
+                        </div>
+                    );
+                },
+            },
+        ],
+        [userData?.data],
+    );
 
     return (
-        <ul>
-            {products.map((product) => (
-                <li key={product.id}>
-                    <h4>
-                        {product.id} - ({product.name})
-                    </h4>
-                </li>
-            ))}
-        </ul>
+        <List>
+            <DataGrid {...dataGridProps} columns={columns} autoHeight />
+        </List>
     );
-}
-
-export default UserList
+};
