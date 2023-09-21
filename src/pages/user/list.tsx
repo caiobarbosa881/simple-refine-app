@@ -2,69 +2,68 @@ import React from "react";
 import {
     useDataGrid,
     List,
-    DateField,
-    
+    EmailField,
 } from "@refinedev/mui";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
-import { IResourceComponentsProps, useMany, useNavigation } from "@refinedev/core";
-import TextField from "@mui/material/TextField/TextField";
-import { useGo } from '@refinedev/core';
+import { IResourceComponentsProps, useNavigation } from "@refinedev/core";
 import Button from "@mui/material/Button";
+import { IUser } from "../../interfaces";
+import { TextField } from "@mui/material";
 
 export const UserList: React.FC<IResourceComponentsProps> = () => {
-    const { dataGridProps } = useDataGrid();
+    const { dataGridProps } = useDataGrid<IUser>();
     const { edit, show } = useNavigation();
 
-
-    const { data: userData } = useMany({
-        resource: "users",
-        ids: dataGridProps?.rows?.map((item: any) => item?.category?.id) ?? [],
-        queryOptions: {
-            enabled: !!dataGridProps?.rows,
-        },
-    });
-
-    const columns = React.useMemo<GridColDef[]>(
+    const columns = React.useMemo<GridColDef<IUser>[]>(
         () => [
             {
                 field: "id",
                 headerName: "Id",
                 type: "number",
                 minWidth: 50,
+                sortable: true,
             },
             {
                 field: "name",
                 flex: 1,
-                headerName: "name",
-                minWidth: 250,
-                renderCell: function render({ value }) {
-                    return <TextField value={value} />;
+                headerName: "Name",
+                renderCell: function render({ row }) {
+                    return <TextField value={row.name} />;
                 },
+                minWidth: 200,
+                sortable: true,
+            },
+            {
+                field: "mail",
+                flex: 1,
+                headerName: "Mail",
+                renderCell: function render({ row }) {
+                    return <EmailField value={row.mail} />;
+                },
+                minWidth: 200,
+                sortable: true,
             },
             {
                 field: "birthday",
                 flex: 1,
                 headerName: "Birthday",
                 minWidth: 250,
-                renderCell: function render({ value }) {
-                    return <DateField value={value} />;
-                },
+                sortable: true,
             },
             {
                 field: "createdAt",
                 flex: 1,
                 headerName: "Created At",
                 minWidth: 250,
-                renderCell: function render({ value }) {
-                    return <DateField value={value} />;
-                },
+                sortable: true,
             },
             {
-                field: "actions", // Nome da coluna de ações
+                field: "actions",
                 headerName: "Actions",
+                sortable: true,
+                filterable: false,
                 minWidth: 150,
                 renderCell: function render({ row }) {
-                    // Aqui você pode adicionar botões de "Edit" e "Show" para cada linha
                     return (
                         <div>
                             <Button onClick={() => edit("users", row.id)} >Edit</Button>
@@ -74,12 +73,16 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
                 },
             },
         ],
-        [userData?.data],
+        [],
     );
 
     return (
-        <List>
-            <DataGrid {...dataGridProps} columns={columns} autoHeight />
+        <List>      
+            <DataGrid 
+            {...dataGridProps}
+            columns={columns}
+            autoHeight
+            />
         </List>
     );
 };

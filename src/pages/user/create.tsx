@@ -6,7 +6,6 @@ export const UserCreate = () => {
         saveButtonProps,
         refineCore: { formLoading },
         register,
-        control,
         formState: { errors },
     } = useForm();
 

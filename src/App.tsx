@@ -12,6 +12,7 @@ import dataProvider from "@refinedev/simple-rest";
 import routerProvider, {
     UnsavedChangesNotifier,
     DocumentTitleHandler,
+    NavigateToResource,
 } from "@refinedev/react-router-v6";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { UserList } from "./pages/user/list";
@@ -38,13 +39,10 @@ function App() {
                         resources={[
                             {
                                 name: "users",
-                                list: "/user/list",
-                                show: "/user/show/:id",
-                                create: "/user/create",
-                                edit: "/user/edit/:id",
-                                meta: {
-                                   dataProviderName: "default",
-                                },
+                                list: "/users",
+                                show: "/users/show/:id",
+                                create: "/users/create",
+                                edit: "/users/edit/:id",
                             },
                         ]}
                         options={{
@@ -54,27 +52,28 @@ function App() {
                     >
                         <ThemedLayoutV2>
                             <Routes>
+                                <Route 
+                                    index
+                                    element={
+                                        <NavigateToResource resource="users" />
+                                    } 
+                                />
+
+                                <Route path="users">
+                                    <Route index element={<UserList/>} />
                                     <Route
-                                        path="/users"
+                                        path="show/:id"
                                         element={<UserShow />}
                                     />
                                     <Route
-                                        path="/user/list"
-                                        element={<UserList/>}
-                                    />
-                                    <Route
-                                        path="/user/create"
-                                        element={<UserCreate/>}
-                                    />
-                                     <Route
-                                        path="/user/show/:id"
-                                        element={<UserShow />}
-                                    />
-                                    <Route
-                                        path="/user/edit/:id"
+                                        path="edit/:id"
                                         element={<UserEdit />}
                                     />
-                                    
+                                    <Route
+                                        path="create"
+                                        element={<UserCreate/>}
+                                    />  
+                                </Route>
                             </Routes>
                         </ThemedLayoutV2>
                         <UnsavedChangesNotifier />
